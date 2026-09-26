@@ -6,7 +6,7 @@ function select(list){
   drop.classList.toggle('has-file',!!file);
   drop.querySelector('.drop-title').textContent=file?file.name:'Choose a file';
   drop.querySelector('.drop-sub').textContent=file?formatSize(file.size)+' • Ready to upload':'or drag and drop';
-  status.textContent=file?'1 file selected.':'Choose a file to begin.';
+  status.textContent=file?'1 file selected.':'Choose a file to begin.';drop.querySelector('.drop-sub').textContent=file?'1 file selected • Ready to upload':'or drag and drop';
 }
 function formatSize(n){const u=['B','KB','MB','GB'];let i=0;while(n>=1024&&i<u.length-1){n/=1024;i++}return(i?n.toFixed(n<10?1:0):n.toFixed(0))+' '+u[i]}
 input.onchange=e=>select(e.target.files);
