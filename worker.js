@@ -1,5 +1,5 @@
 const BUCKET='gaxity-uploads';
-const MAX=95*1024*1024;
+const MAX=50*1024*1024;
 const ALLOWED=[0,3600,21600,43200,86400,259200,604800,2592000];
 
 export default {
@@ -35,8 +35,8 @@ async function upload(req,env){
   const id=crypto.randomUUID().replaceAll('-','');
   const name=(file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180)||'file');
   const expiry=seconds?Math.floor(Date.now()/1000)+seconds:0;
-  const path=id+'~'+expiry+'~'+name;
-  const endpoint=env.SUPABASE_URL.replace(/\/$/,'')+'/storage/v1/object/'+BUCKET+'/'+encodeURIComponent(path);
+  const path=id+'/'+expiry+'/'+name;
+  const endpoint=env.SUPABASE_URL.replace(/\/$/,'')+'/storage/v1/object/'+BUCKET+'/'+path.split('/').map(encodeURIComponent).join('/');
 
   let r;
   try{
@@ -64,14 +64,14 @@ async function upload(req,env){
 }
 
 async function download(env,path){
-  const p=path.split('~');
-  if(p.length<3||path.includes('..')) return new Response('Not found',{status:404,headers:security()});
+  const p=path.split('/');
+  if(p.length<3||p.some(x=>x==='.'||x==='..'||x.includes('\\'))) return new Response('Not found',{status:404,headers:security()});
   const expiry=Number(p[1]);
   if(expiry&&Date.now()/1000>=expiry){await del(env,path);return new Response('This file has expired.',{status:410,headers:security()})}
   const r=await fetch(env.SUPABASE_URL.replace(/\/$/,'')+'/storage/v1/object/'+BUCKET+'/'+encodeURIComponent(path),{headers:{Authorization:'Bearer '+env.SUPABASE_SERVICE_ROLE_KEY,apikey:env.SUPABASE_SERVICE_ROLE_KEY}});
   if(!r.ok) return new Response('File not found.',{status:404,headers:security()});
   const h=new Headers(r.headers);
-  h.set('Content-Disposition','inline; filename="'+p.slice(2).join('~').replace(/["\r\n]/g,'_')+'"');
+  h.set('Content-Disposition','inline; filename="'+p.slice(2).join('/').replace(/["\r\n]/g,'_')+'"');
   Object.entries(security()).forEach(([k,v])=>h.set(k,v));
   return new Response(r.body,{status:200,headers:h});
 }
@@ -88,7 +88,7 @@ async function cleanup(env){
     if(!r.ok)return;
     const items=await r.json();
     if(!Array.isArray(items)||!items.length)return;
-    for(const o of items){const e=Number(String(o.name).split('~')[1]);if(e&&e<=now)await del(env,o.name)}
+    for(const o of items){const e=Number(String(o.name).split('/')[1]);if(e&&e<=now)await del(env,o.name)}
     if(items.length<100)return;
     offset+=100;
   }
