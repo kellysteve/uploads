@@ -1,1 +1,17 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gaxity Upload</title><link rel="stylesheet" href="/style.css"></head><body><main><section class="card"><h1>Gaxity <span>Upload</span></h1><p>Simple, fast file sharing.</p><label class="drop" id="drop"><input id="file" type="file"><div class="drop-icon">↑</div><b class="drop-title">Choose a file</b><small class="drop-sub">or drag and drop</small></label><p class="hint">1 file per upload • No account or API key required.</p><p class="limit">Maximum file size: 50 MB</p><label class="row"><span>Expiration</span><select id="expires"><option value="0">Never</option><option value="3600">1 hour</option><option value="21600">6 hours</option><option value="43200">12 hours</option><option value="86400">1 day</option><option value="259200">3 days</option><option value="604800">7 days</option><option value="2592000">30 days</option></select></label><button id="upload" disabled>Upload file</button><p id="status"></p><div id="results"></div><footer>© <span id="year"></span> Gaxity Platform, Powered by Gaxity Cloud</footer></section></main><script src="/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111"><title>Gaxity Upload</title><link rel="stylesheet" href="/style.css">
+</head>
+<body><main><section class="card">
+<div class="brand"><div class="brand-mark">G</div><div><h1>Gaxity <span>Upload</span></h1><p>Simple, fast file sharing.</p></div></div>
+<label class="drop" id="drop"><input id="file" type="file"><div class="drop-icon">↑</div><b class="drop-title">Choose a file</b><small class="drop-sub">or drag and drop</small><small class="drop-meta">Maximum 50 MB</small><div class="progress-wrap" id="progressWrap"><div class="progress"><span id="progressBar"></span></div><small id="progressText">0%</small></div></label>
+<div class="selection" id="selection" hidden><div class="selection-info"><span class="file-badge">FILE</span><div><strong id="fileName">No file</strong><small id="fileInfo">0 B</small></div></div><button class="remove" id="remove" type="button" title="Remove file">×</button></div>
+<p class="hint">1 file per upload • No account or API key required.</p>
+<label class="row"><span>Expiration</span><select id="expires"><option value="0">Never</option><option value="3600">1 hour</option><option value="21600">6 hours</option><option value="43200">12 hours</option><option value="86400">1 day</option><option value="259200">3 days</option><option value="604800">7 days</option><option value="2592000">30 days</option></select></label>
+<p class="expiry-note" id="expiryNote">This link will not expire.</p>
+<button id="upload" disabled type="button">Upload file</button><p id="status" role="status" aria-live="polite">Choose a file to begin.</p><div id="results"></div>
+<div class="features"><span>🔒 Private storage</span><span>⚡ Fast sharing</span><span>🗑 Auto-expiry</span></div>
+<footer>© <span id="year"></span> Gaxity Platform, Powered by Gaxity Cloud</footer>
+</section></main><script src="/app.js"></script></body></html>
